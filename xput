@@ -1,0 +1,23 @@
+address="root@xxywebsite.com"
+
+file_dir='~/documents'
+if [ ${1:-''} = "-d" ]
+then
+	file_name="${2}.txt"
+	message=$3
+else
+        file_name="`date '+%Y-%m-%d'`.txt"
+	message=$1
+fi
+file="${file_dir}/${file_name}"
+echo ${file}
+
+# create a file if not exists
+ssh ${address} "\
+if [ ! -e ${file} ]
+then
+	touch ${file}
+fi"
+
+# append message
+ssh ${address} "echo ${message} >> ${file}"

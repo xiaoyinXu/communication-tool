@@ -1,0 +1,17 @@
+address="root@xxywebsite.com"
+
+arg1=${1:-''}
+arg2=${2:-''}
+
+
+file_dir='~/documents'
+
+if [ $arg1  "-d" ]
+then
+	file_name="`date '+%Y-%m-%d'`.txt"
+else
+	file_name="${arg2}.txt"
+fi
+file="${file_dir}/${file_name}"
+
+ssh ${address} "cat ${file}"
