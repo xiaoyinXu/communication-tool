@@ -6,12 +6,19 @@ arg2=${2:-''}
 
 file_dir='~/documents'
 
-if [ $arg1  "-d" ]
+if [ ${arg1:-''} = "-d" ]
 then
-	file_name="`date '+%Y-%m-%d'`.txt"
-else
 	file_name="${arg2}.txt"
+elif [[ ${arg1:-''} =~ -t+ ]]
+then
+	count=`tr -cd t <<< $arg1 | wc -c`  # count of t
+	timestamp=$(( `date '+%s'` - ( 24 * 60 * 60 * ${count} ) ))
+	date=`date -r $timestamp +%Y-%m-%d`
+	file_name="${date}.txt"
+else
+	file_name="`date '+%Y-%m-%d'`.txt"
 fi
+
 file="${file_dir}/${file_name}"
 
 ssh ${address} "cat ${file}"

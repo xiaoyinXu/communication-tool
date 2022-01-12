@@ -5,12 +5,18 @@ if [ ${1:-''} = "-d" ]
 then
 	file_name="${2}.txt"
 	message=$3
+elif [[ ${1:-''} =~ -t+ ]]
+then
+        count=`tr -cd t <<< $1 | wc -c`  # count of t
+        timestamp=$(( `date '+%s'` - ( 24 * 60 * 60 * ${count} ) ))
+        date=`date -r $timestamp +%Y-%m-%d`
+        file_name="${date}.txt"
+	message=$2
 else
         file_name="`date '+%Y-%m-%d'`.txt"
 	message=$1
 fi
 file="${file_dir}/${file_name}"
-echo ${file}
 
 # create a file if not exists
 ssh ${address} "\
