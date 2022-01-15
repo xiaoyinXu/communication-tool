@@ -1,20 +1,35 @@
 address="root@xxywebsite.com"
 
+function fn() {
+	message=$1
+	from_index=$2
+	result_str=`echo $message|awk -v from_index=$from_index '
+	{
+		for (i = 1; i < from_index; ++i) {
+			$i=""
+		}
+		print $0
+	}
+'
+`
+	echo $result_str
+}
+
 file_dir='~/documents'
 if [ ${1:-''} = "-d" ]
 then
 	file_name="${2}.txt"
-	message=$3
+	message=fn $@ 3
 elif [[ ${1:-''} =~ -t+ ]]
 then
         count=`tr -cd t <<< $1 | wc -c`  # count of t
         timestamp=$(( `date '+%s'` - ( 24 * 60 * 60 * ${count} ) ))
         date=`date -r $timestamp +%Y-%m-%d`
         file_name="${date}.txt"
-	message=$2
+	message=fn $@ 2
 else
         file_name="`date '+%Y-%m-%d'`.txt"
-	message=$1
+	message=`fn "$*" 1`
 fi
 file="${file_dir}/${file_name}"
 
