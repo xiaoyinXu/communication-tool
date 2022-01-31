@@ -14,6 +14,23 @@ then
 	timestamp=$(( `date '+%s'` - ( 24 * 60 * 60 * ${count} ) ))
 	date=`date -r $timestamp +%Y-%m-%d`
 	file_name="${date}.txt"
+
+elif [[ ${arg1:-''} == "--after" ]]
+then
+	threshold=$2
+	ssh ${address} "cd $file_dir && ls | grep -E '\.txt' | awk -F '.' -v threshold=$threshold '\$1 >= threshold{print \$0}' | xargs cat"
+	exit 0
+elif [[ ${arg1:-''} == "--all" ]]
+then
+	ssh ${address} "cd $file_dir && ls | grep -E '\.txt' | xargs cat"
+	exit 0
+elif [[ ${arg1:-''} = "-all" ]]
+then
+	ssh ${address} "cd ${file_dir} && ls | xargs cat"
+	exit 233
+elif [[ ${arg1:-''} =~ -t+ ]]
+then
+	echo 1
 else
 	file_name="`date '+%Y-%m-%d'`.txt"
 fi
