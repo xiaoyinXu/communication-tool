@@ -24,10 +24,6 @@ elif [[ ${arg1:-''} == "--all" ]]
 then
 	ssh ${address} "cd $file_dir && ls | grep -E '\.txt' | xargs cat"
 	exit 0
-elif [[ ${arg1:-''} = "-all" ]]
-then
-	ssh ${address} "cd ${file_dir} && ls | xargs cat"
-	exit 233
 elif [[ ${arg1:-''} =~ -t+ ]]
 then
 	echo 1
